@@ -1,0 +1,149 @@
+                    =======================================
+                        Module "Tie::Handle" Version 2.0
+                    =======================================
+                     requires Perl version 5.004 or higher
+
+
+           Copyright (c) 1997 by Steffen Beyer. All rights reserved.
+           This package is free software; you can redistribute and/or
+           modify it under the same terms as Perl itself.
+
+
+What does it do:
+----------------
+
+Tie::Handle - tie arbitrary objects to file handles
+
+This module facilitates the tying of file handles with (arbitrary)
+objects.
+
+File handles must be given either as symbolic file handles (like "STDOUT",
+"MYHANDLE" or "MYPACKAGE::MYHANDLE") or as references as returned by the
+object constructor method "new()" from the "IO::Handle" or "FileHandle"
+class (either one works).
+
+Your class "Your::Class" needs to:
+
+        require Tie::Handle;
+
+and to add "Tie::Handle" to the list of classes to inherit from:
+
+        @ISA = qw(Exporter Tie::Handle);
+
+in order to enable tying of file handles with objects of "Your::Class".
+
+Note that your class "Your::Class" is also responsible for providing
+(i.e., overloading) the appropriate methods needed to access your
+objects:
+
+     +   $object->open();
+
+     +   $object->print(@items);
+
+     +   $item = $object->read();
+
+     +   @list = $object->read();
+
+     +   $key = $object->getchar();
+
+     +   $bytes = $object->blockread($buffer,$length[,$offset]);
+
+     +   $object->close();
+
+See the module "Data::Locations" for an example of how to implement
+most of these methods.
+
+
+Available methods:
+------------------
+
+     +   $object->tie('FILEHANDLE');
+
+     +   $object->tie($filehandle);
+
+     +   print @items;
+
+     +   print FILEHANDLE @items;
+
+     +   print $filehandle @items;
+
+     +   printf $format, @items;
+
+     +   printf FILEHANDLE $format, @items;
+
+     +   printf $filehandle $format, @items;
+
+     +   $line = <>;
+
+     +   @list = <>;
+
+     +   $line = <FILEHANDLE>;
+
+     +   @list = <FILEHANDLE>;
+
+     +   $line = <$filehandle>;
+
+     +   @list = <$filehandle>;
+
+     +   $key = getc();
+
+     +   $key = getc(FILEHANDLE);
+
+     +   $key = getc($filehandle);
+
+     +   $bytes =
+         [sys]read(FILEHANDLE,$buffer,$length[,$offset]);
+
+     +   $bytes =
+         [sys]read($filehandle,$buffer,$length[,$offset]);
+
+     +   untie *FILEHANDLE;
+
+     +   untie *{FILEHANDLE};
+
+     +   untie $filehandle;
+
+     +   untie *{$filehandle};
+
+
+Installation:
+-------------
+
+Simply install this module using the following commands:
+
+                            % perl Makefile.PL
+                            % make
+                            % make install
+
+
+Documentation:
+--------------
+
+To see the module's documentation, use the command "man Tie::Handle"
+thereafter.
+
+
+Version history:
+----------------
+
+Version 1.0 was the initial release.
+
+Version 2.0 changed the handling of "reset()" while tying/untying a file
+handle to some object to a more flexible solution: Upon tying, an object
+method "open()" is invoked. Upon untying, an object method "close()" is
+invoked. This way you can overload these methods in your module with
+whatever you like, even a dummy method if nothing needs to be done.
+
+
+Author's note:
+--------------
+
+I hope you will find this module beneficial!
+
+Share and enjoy!
+
+Yours,
+--
+    Steffen Beyer <sb@sdm.de> http://www.engelschall.com/u/sb/
+     "There is enough for the need of everyone in this world,
+      but not for the greed of everyone." - Mahatma Gandhi
