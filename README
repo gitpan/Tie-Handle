@@ -1,5 +1,5 @@
                     =======================================
-                        Module "Tie::Handle" Version 3.0
+                        Module "Tie::Handle" Version 1.0
                     =======================================
                      requires Perl version 5.004 or higher
 
@@ -17,45 +17,60 @@ Tie::Handle - tie arbitrary objects to file handles
 This module facilitates the tying of file handles with (arbitrary)
 objects.
 
-File handles must be given either as symbolic file handles (like "STDOUT",
-"MYHANDLE" or "MYPACKAGE::MYHANDLE") or as references as returned by the
-object constructor method "new()" from the "IO::Handle" or "FileHandle"
-class (either one works).
+File handles must be given either as symbolic file handles (like "STDOUT")
+or as references as returned by the "new()" method of the "IO::Handle"
+or "FileHandle" class (either works).
 
 Your class "Your::Class" needs to:
 
-        require Tie::Handle;
+    require Tie::Handle;
 
 and to add "Tie::Handle" to the list of classes to inherit from:
 
-        @ISA = qw(Exporter Tie::Handle);
+    @ISA = qw(Exporter Tie::Handle);
 
 in order to enable tying of file handles with objects of "Your::Class".
 
 Note that your class "Your::Class" is also responsible for providing
-(i.e., overloading) the appropriate methods needed to access your
-objects:
+(i.e., overloading) the appropriate methods needed for writing to
+and reading from your objects:
 
-     +   $object->open();
-
-     +   $object->print(@items);
-
-     +   $item = $object->read();
-
-     +   @list = $object->read();
-
-     +   $key = $object->getchar();
-
-     +   $bytes = $object->blockread($buffer,$length[,$offset]);
-
-     +   $object->close();
+    "print()", "read()", "reset()", "getchar()" and "blockread()".
 
 See the module "Data::Locations" for an example of how to implement
-most of these methods.
+most of these.
 
+Remember that you may define the default output file handle using
+the Perl function "select()" so that any subsequent "print()" or
+"printf()" statement without an explicit file handle will send
+output to the chosen default file handle automatically!
+
+See the section on "select()" in the perlfunc(1) manpage for more
+details!
+
+To dissociate the connection between a given file handle and object
+(which also resets the state information usually associated with that
+object which is needed to be able to read from the object line by line),
+simply use one of the following statements (depending on wether you are
+using symbolic file handles or file handle references):
+
+                untie *FILEHANDLE;
+                untie *{FILEHANDLE};
+                untie $filehandle;
+                untie *{$filehandle};
+
+To reset an object explicitly (in order to restart reading at the
+beginning, for instance), you can either call
+
+                ${tied *FILEHANDLE}->reset();
+                ${tied *{FILEHANDLE}}->reset();
+                ${tied *{$filehandle}}->reset();
+
+or directly
+
+                $object->reset();
 
 Available methods:
-------------------
 
      +   $object->tie('FILEHANDLE');
 
@@ -73,15 +88,15 @@ Available methods:
 
      +   printf $filehandle $format, @items;
 
-     +   $item = <>;
+     +   $line = <>;
 
      +   @list = <>;
 
-     +   $item = <FILEHANDLE>;
+     +   $line = <FILEHANDLE>;
 
      +   @list = <FILEHANDLE>;
 
-     +   $item = <$filehandle>;
+     +   $line = <$filehandle>;
 
      +   @list = <$filehandle>;
 
@@ -96,14 +111,6 @@ Available methods:
 
      +   $bytes =
          [sys]read($filehandle,$buffer,$length[,$offset]);
-
-     +   untie *FILEHANDLE;
-
-     +   untie *{FILEHANDLE};
-
-     +   untie $filehandle;
-
-     +   untie *{$filehandle};
 
 
 Installation:
@@ -126,20 +133,7 @@ thereafter.
 Version history:
 ----------------
 
-Version 1.0 was the initial release.
-
-Version 2.0 changed the handling of "reset()" while tying/untying a file
-handle to some object to a more flexible solution: Upon tying, an object
-method "open()" is invoked. Upon untying, an object method "close()" is
-invoked. This way you can overload these methods in your module with
-whatever you like, even a dummy method if nothing needs to be done.
-
-Version 2.1 contains two minor fixes concerning the test for the correct
-type of object references and some minute changes in the documentation.
-
-Version 3.0 contains minor embellishments of the code and documentation;
-the version number went up this big step only to reflect the version number
-of the "Data::Locations" distribution, of which this module is a part.
+This is the initial release.
 
 
 Author's note:
