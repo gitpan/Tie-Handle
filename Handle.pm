@@ -21,7 +21,7 @@ require Exporter;
 
 @EXPORT_OK = qw();
 
-$VERSION = "2.1";
+$VERSION = "3.0";
 
 sub AUTOLOAD
 {
@@ -39,7 +39,7 @@ sub tie
     {
         if (ref($filehandle) =~ /^[A-Z]+$/)
         {
-            croak "Tie::Handle::tie(): not an object reference";
+            croak 'Tie::Handle::tie(): not a file handle reference';
         }
     }
     else                   ##  symbolic file handle
@@ -70,13 +70,13 @@ sub TIEHANDLE
     }
     else
     {
-        croak "Tie::Handle::TIEHANDLE(): not an object reference";
+        croak 'Tie::Handle::TIEHANDLE(): not an object reference';
     }
 }
 
 sub PRINT
 {
-    croak "Usage: print [FILEHANDLE|\$filehandle] \@items;"
+    croak 'Usage: print [FILEHANDLE|$filehandle] @items;'
       if (@_ < 1);
 
     my($proxy) = shift;
@@ -86,7 +86,7 @@ sub PRINT
 
 sub PRINTF
 {
-    croak "Usage: printf [FILEHANDLE|\$filehandle] \$format, \@items;"
+    croak 'Usage: printf [FILEHANDLE|$filehandle] $format, @items;'
       if (@_ < 2);
 
     my($proxy) = shift;
@@ -97,7 +97,7 @@ sub PRINTF
 
 sub READLINE
 {
-    croak "Usage: {\$item,\@list} = <[FILEHANDLE|\$filehandle]>;"
+    croak 'Usage: {$item,@list} = <[FILEHANDLE|$filehandle]>;'
       if (@_ != 1);
 
     my($proxy) = shift;
@@ -107,7 +107,7 @@ sub READLINE
 
 sub GETC
 {
-    croak "Usage: \$key = getc([FILEHANDLE|\$filehandle]);"
+    croak 'Usage: $key = getc([FILEHANDLE|$filehandle]);'
       if (@_ != 1);
 
     my($proxy) = shift;
@@ -429,8 +429,8 @@ See the section on "select()" in L<perlfunc(1)> for more details!
 
 IMPORTANT:
 
-Note that "open()" and "close()" on a tied file handle have no effect
-on the object which is tied to it!
+Note that calling the Perl (built-in) functions "open()" and "close()"
+on a tied file handle has no effect on the object which is tied to it!
 
 (But beware that they attempt to open and close the specified file,
 respectively, even though this is useless in this case!)
@@ -438,8 +438,8 @@ respectively, even though this is useless in this case!)
 Note also that you will get errors if you try to read from a tied file
 handle which you opened for output only using "open()", or vice-versa!
 
-Therefore it is best not to use "open()" and "close()" on tied file
-handles at all.
+Therefore it is best not to use the built-in Perl functions "open()"
+and "close()" on tied file handles at all.
 
 Instead, if you want to restart reading from the beginning of any given
 object, rather invoke the corresponding method of your class on it (if
@@ -452,8 +452,7 @@ sequentially), then instead of invoking that method directly using:
 
                 $object->reset();
 
-you can also invoke this method via its associated file handle,
-like this:
+you can also invoke this method via its associated file handle, like this:
 
                 ${tied *FILEHANDLE}->reset();
                 ${tied *{FILEHANDLE}}->reset();
@@ -461,14 +460,14 @@ like this:
 
 =head1 SEE ALSO
 
-Data::Locations(3), perl(1), perldata(1),
-perlfunc(1), perlsub(1), perlmod(1), perlref(1),
-perlobj(1), perlbot(1), perltoot(1), perltie(1),
-printf(3), sprintf(3).
+Data::Locations(3), Data::Locations::Shell(3),
+perl(1), perldata(1), perlfunc(1), perlsub(1),
+perlmod(1), perlref(1), perlobj(1), perlbot(1),
+perltoot(1), perltie(1), printf(3), sprintf(3).
 
 =head1 VERSION
 
-This man page documents "Tie::Handle" version 2.1.
+This man page documents "Tie::Handle" version 3.0.
 
 =head1 AUTHOR
 

@@ -1,5 +1,5 @@
                     =======================================
-                        Module "Tie::Handle" Version 2.1
+                        Module "Tie::Handle" Version 3.0
                     =======================================
                      requires Perl version 5.004 or higher
 
@@ -73,15 +73,15 @@ Available methods:
 
      +   printf $filehandle $format, @items;
 
-     +   $line = <>;
+     +   $item = <>;
 
      +   @list = <>;
 
-     +   $line = <FILEHANDLE>;
+     +   $item = <FILEHANDLE>;
 
      +   @list = <FILEHANDLE>;
 
-     +   $line = <$filehandle>;
+     +   $item = <$filehandle>;
 
      +   @list = <$filehandle>;
 
@@ -136,6 +136,10 @@ whatever you like, even a dummy method if nothing needs to be done.
 
 Version 2.1 contains two minor fixes concerning the test for the correct
 type of object references and some minute changes in the documentation.
+
+Version 3.0 contains minor embellishments of the code and documentation;
+the version number went up this big step only to reflect the version number
+of the "Data::Locations" distribution, of which this module is a part.
 
 
 Author's note:
