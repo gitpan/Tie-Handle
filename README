@@ -1,5 +1,5 @@
                     =======================================
-                        Module "Tie::Handle" Version 2.0
+                        Module "Tie::Handle" Version 2.1
                     =======================================
                      requires Perl version 5.004 or higher
 
@@ -133,6 +133,9 @@ handle to some object to a more flexible solution: Upon tying, an object
 method "open()" is invoked. Upon untying, an object method "close()" is
 invoked. This way you can overload these methods in your module with
 whatever you like, even a dummy method if nothing needs to be done.
+
+Version 2.1 contains two minor fixes concerning the test for the correct
+type of object references and some minute changes in the documentation.
 
 
 Author's note:

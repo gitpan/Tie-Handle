@@ -21,7 +21,7 @@ require Exporter;
 
 @EXPORT_OK = qw();
 
-$VERSION = "2.0";
+$VERSION = "2.1";
 
 sub AUTOLOAD
 {
@@ -37,10 +37,9 @@ sub tie
 
     if (ref($filehandle))  ##  file handle reference
     {
-        if (ref($filehandle) !~ /^(?:File|IO::)Handle$/)
+        if (ref($filehandle) =~ /^[A-Z]+$/)
         {
-            croak
-  "Tie::Handle::tie(): not a 'FileHandle' or 'IO::Handle' object reference";
+            croak "Tie::Handle::tie(): not an object reference";
         }
     }
     else                   ##  symbolic file handle
@@ -62,8 +61,7 @@ sub TIEHANDLE
     my($object) = shift;
     my($proxy);
 
-    if (ref($object) &&
-       (ref($object) !~ /^SCALAR$|^ARRAY$|^HASH$|^CODE$|^REF$/))
+    if (ref($object) && (ref($object) !~ /^[A-Z]+$/))
     {
         $proxy = \$object;
         bless($proxy);
@@ -99,7 +97,7 @@ sub PRINTF
 
 sub READLINE
 {
-    croak "Usage: {\$line,\@list} = <[FILEHANDLE|\$filehandle]>;"
+    croak "Usage: {\$item,\@list} = <[FILEHANDLE|\$filehandle]>;"
       if (@_ != 1);
 
     my($proxy) = shift;
@@ -184,7 +182,7 @@ C<printf $filehandle $format, @items;>
 
 =item *
 
-C<$line = E<lt>E<gt>;>
+C<$item = E<lt>E<gt>;>
 
 =item *
 
@@ -192,7 +190,7 @@ C<@list = E<lt>E<gt>;>
 
 =item *
 
-C<$line = E<lt>FILEHANDLEE<gt>;>
+C<$item = E<lt>FILEHANDLEE<gt>;>
 
 =item *
 
@@ -200,7 +198,7 @@ C<@list = E<lt>FILEHANDLEE<gt>;>
 
 =item *
 
-C<$line = E<lt>$filehandleE<gt>;>
+C<$item = E<lt>$filehandleE<gt>;>
 
 =item *
 
@@ -470,7 +468,7 @@ printf(3), sprintf(3).
 
 =head1 VERSION
 
-This man page documents "Tie::Handle" version 2.0.
+This man page documents "Tie::Handle" version 2.1.
 
 =head1 AUTHOR
 
